@@ -1,0 +1,18 @@
+name: Cleanup PR
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  purge-image:
+    name: Delete image from ghcr.io
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete excalidraw:pr-${{ github.event.pull_request.number }}
+        uses: bots-house/ghcr-delete-image-action@v1.0.0
+        with:
+          owner: ${{ github.repository_owner }}
+          name: excalidraw
+          token: ${{ secrets.GH_DEL_IMAGE_PAT }}
+          tag: pr-${{ github.event.pull_request.number }}
