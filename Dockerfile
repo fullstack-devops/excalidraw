@@ -11,7 +11,7 @@ RUN yarn --ignore-optional
 ARG NODE_ENV=production
 RUN yarn build:app:docker
 
-FROM nginxinc/nginx-unprivileged:1.23.0-alpine
+FROM nginxinc/nginx-unprivileged:1.23.1-alpine
 
 COPY --from=build /opt/node_app/build /usr/share/nginx/html
 
