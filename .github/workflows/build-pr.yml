@@ -23,7 +23,29 @@ jobs:
     needs: generate_infos
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "14.x"
+      
+      - name: get excalidraw version
+        id: excalidraw_version
+        run: echo "::set-output name=version::$(cat ./EXCALIDRAW_VERSION)"
+
+      - name: Check out excalidraw
+        uses: actions/checkout@v3
+        with:
+          repository: 'excalidraw/excalidraw'
+          path: excalidraw
+          ref: v${{ steps.excalidraw_version.outputs.version }}
+          
+      - name: install packages
+        working-directory: excalidraw
+        run: yarn --ignore-optional
+      - name: build application
+        working-directory: excalidraw
+        run: yarn run build:app:docker
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
