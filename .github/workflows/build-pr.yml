@@ -31,7 +31,7 @@ jobs:
       
       - name: get excalidraw version
         id: excalidraw_version
-        run: echo "::set-output name=version::$(cat ./EXCALIDRAW_VERSION)"
+        run: echo "::set-output name=version::$(cat ./APP_VERSION)"
 
       - name: Check out excalidraw
         uses: actions/checkout@v3
@@ -65,5 +65,6 @@ jobs:
         with:
           context: ./
           push: true
+          build-args: APP_VERSION=${{ steps.excalidraw_version.outputs.version }}
           tags: |
             ${{ env.IMAGE_BASE }}:pr-${{ github.event.pull_request.number }}
