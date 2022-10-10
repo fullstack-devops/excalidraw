@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "14.x"
-      
+
       - name: get excalidraw version
         id: excalidraw_version
         run: echo "::set-output name=version::$(cat ./APP_VERSION)"
@@ -36,10 +36,10 @@ jobs:
       - name: Check out excalidraw
         uses: actions/checkout@v3
         with:
-          repository: 'excalidraw/excalidraw'
+          repository: "excalidraw/excalidraw"
           path: excalidraw
           ref: v${{ steps.excalidraw_version.outputs.version }}
-          
+
       - name: install packages
         working-directory: excalidraw
         run: yarn --ignore-optional
@@ -92,10 +92,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ACI_RELEASE_ID: ${{ needs.create_release.outputs.releaseid }}
 
-      # - name: update helm charts appVersion
-      #   uses: peter-evans/repository-dispatch@v2
-      #   with:
-      #     token: ${{ secrets.HELM_REPO_TOKEN }}
-      #     repository: fullstack-devops/helm-charts
-      #     event-type: update_chart_version
-      #     client-payload: '{"chart": "excalidraw", "version": "${{ needs.create_release.outputs.version }}"}'
+      - name: update helm charts appVersion
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.HELM_REPO_TOKEN }}
+          repository: fullstack-devops/helm-charts
+          event-type: update_chart_version
+          client-payload: '{"chart": "excalidraw", "version": "${{ needs.create_release.outputs.version }}"}'
