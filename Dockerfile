@@ -1,17 +1,10 @@
-FROM nginx:1.21-alpine
+FROM excalidraw/excalidraw:latest
 
-USER 0
-
-ARG APP_VERSION
-RUN echo -e "Nginx Version: $NGINX_VERSION\nApp Version: $APP_VERSION" > /VERSION
-
-ADD .nginx/nginx.conf /etc/nginx/nginx.conf
-ADD .nginx/default.conf /etc/nginx/conf.d/default.conf
-
-WORKDIR /app
+COPY .nginx/nginx.conf /etc/nginx/nginx.conf
+COPY .nginx/default.conf /etc/nginx/conf.d/default.conf
 
 ## add permissions for nginx user
-RUN chown -R nginx:nginx /app && chmod -R 755 /app && \
+RUN chown -R nginx:nginx /usr/share/nginx/html && chmod -R 755 /usr/share/nginx/html && \
         chown -R nginx:nginx /var/cache/nginx && \
         chown -R nginx:nginx /var/log/nginx && \
         chown -R nginx:nginx /etc/nginx/conf.d
@@ -20,6 +13,4 @@ RUN touch /var/run/nginx.pid && \
 
 USER nginx
 
-ADD ./excalidraw/build /usr/share/nginx/html
-
-CMD cat /VERSION && nginx -g 'daemon off;'
+CMD nginx -g 'daemon off;'
